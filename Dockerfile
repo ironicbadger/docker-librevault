@@ -10,4 +10,4 @@ RUN \
   apt-get update && \
   apt-get install -y librevault
 
-CMD ["librevault-daemon"]
+COPY /root/ /
