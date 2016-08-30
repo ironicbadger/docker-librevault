@@ -1,0 +1,5 @@
+#!/bin/bash
+
+chown -R librevault:librevault /home/librevault /srv/librevault
+
+exec su --command "/usr/bin/librevault-daemon --data /srv/librevault" --login librevault
