@@ -1,18 +1,17 @@
-FROM ubuntu:xenial
-MAINTAINER sparkly[blue]balls
+FROM lsiobase/xenial
 
 ARG DEBIAN_FRONTEND="noninteractive"
+ARG LIBREVAULT_CONTROL_LISTEN=42346
+ARG LIBREVAULT_MULTICAST_GROUP=28914
+ARG LIBREVAULT_P2P_LISTEN=42345
 ARG LIBREVAULT_VERSION="0.1.18-85+ubuntu16.04"
 
-# Websockets
-EXPOSE 42345
-EXPOSE 42346
+EXPOSE ${LIBREVAULT_CONTROL_LISTEN} \
+       ${LIBREVAULT_CONTROL_MULTICAST_GROUP} \
+       ${LIBREVAULT_P2P_LISTEN}
 
-# Multicast Discovery
-EXPOSE 28914
-
-# Allow the main directory to be optionally mounted from the host for persistence
-VOLUME ["/srv/librevault"]
+# Allow the confiuration directory and the librevault data directory to be optionally mounted from the host for persistence
+VOLUME ["/home/librevault/.config/Librevault", "/srv/librevault"]
 
 COPY docker/ /
 RUN apt-get update && \
@@ -27,6 +26,7 @@ RUN apt-get update && \
     useradd -m librevault && \
     chmod 755 /srv/librevault \
               /usr/bin/start && \
-    chown librevault:librevault /srv/librevault
+    chown -R librevault:librevault /home/librevault/ \
+                                   /srv/librevault
 
 ENTRYPOINT ["/usr/bin/start"]
